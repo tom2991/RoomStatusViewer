@@ -1,15 +1,23 @@
 # 気温データを取得し、DynamoDBにinsertする
+import sys
+import traceback
 from datetime import datetime, timedelta, timezone
 import boto3
 
+dynamoDB = boto3.resource('dynamodb')
+table = dynamoDB.Table('temperature')
+
+
 # lambdaのハンドラ
-def lambda_handler(event, context):
+def handle(event, context):
     # ToDo POSTを受け取る
     print("print log.")
+    
     return {
-        "message": "Hello World",
+        "statusCode": 200,
+        "headers": {"Content-Type": "text/html"},
+        "body": insertTemperature('37.5')
     }
-
 # DynamoDBのKeyとして使用する日付と時刻を計算する
 def calcDateTime():
     # JSTを指定しないと、たぶんUNIX標準時になる
@@ -18,10 +26,15 @@ def calcDateTime():
     return now.strftime("%Y%m%d_%H%M%S")
 
 # DynamoDBに気温をinsertする
-def insertTemperature(temperature):
+def insertTemperature(temperatureValue):
     key = calcDateTime()
-    dynamoDB = boto3.resource('dynamodb')
-    table = dynamoDB.Table('temperature')
-    table.put_item = {
-        key:temperature
-    }
+    try:
+        table.put_item(
+            Item={
+                "datetime_key": key,
+                "value": temperatureValue
+            }
+        )
+        return "OK"
+    except :
+        return "NG"
