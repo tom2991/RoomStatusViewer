@@ -25,7 +25,7 @@ def calcDateTime():
     now = datetime.now(JST)
     return now.strftime("%Y%m%d_%H%M%S")
 
-# DynamoDBに気温をinsertする
+# DynamoDBに気温をputする
 def insertTemperature(temperatureValue):
     key = calcDateTime()
     try:
