@@ -12,11 +12,10 @@ table = dynamoDB.Table('temperature')
 def handle(event, context):
     # ToDo POSTを受け取る
     print("print log.")
-    
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "text/html"},
-        "body": insertTemperature('37.5')
+        "body": insertTemperature(event['queryStringParameters']['temperature'])
     }
 # DynamoDBのKeyとして使用する日付と時刻を計算する
 def calcDateTime():
@@ -35,6 +34,6 @@ def insertTemperature(temperatureValue):
                 "value": temperatureValue
             }
         )
-        return "OK"
+        return temperatureValue
     except :
         return "NG"
