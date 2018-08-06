@@ -34,6 +34,6 @@ def insertTemperature(temperatureValue):
                 "value": temperatureValue
             }
         )
-        return temperatureValue
+        return key + ":" + temperatureValue + "\n"
     except :
-        return "NG"
+        return key + ":" + "NG\n"
