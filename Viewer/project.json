@@ -1,6 +1,6 @@
 {
-  "name": "SetTemperature",
-  "description": "SetTemperature",
+  "name": "RoomStatus",
+  "description": "RoomStatus",
   "memory": 128,
   "timeout": 5,
   "role": "arn:aws:iam::619063643007:role/dynamoDB",
