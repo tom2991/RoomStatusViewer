@@ -46,10 +46,12 @@ def cerateRenderData(date):
     )
     temperateureList = []
     timeList = []
-    for data in response['Items']:
+    responseItems = response['Items']
+    responseItems = sorted(responseItems, key=lambda x:x['datetime_key'])
+    for data in responseItems:
         temperateureList.append(data['value'])
         dateTime = data['datetime_key'].split("_")
-        timeList.append(dateTime[1])
+        timeList.append(dateTime[1][:4])
     renderData = {}
     renderData['time'] = timeList
     renderData['temperature'] = temperateureList

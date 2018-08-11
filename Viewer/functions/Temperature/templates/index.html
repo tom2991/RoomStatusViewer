@@ -9,6 +9,7 @@
     });
 
     var ctx = document.getElementById("temperatureChart").getContext('2d');
+    ctx.canvas.height = 280;
     var timeLabel = {{renderData.time}};
     var temperatureData = {{renderData.temperature}};
     var myChart = new Chart(ctx, {
@@ -21,6 +22,8 @@
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             elements: {
                 line: {
                     tension: 0, // ベジェ曲線を無効にする
@@ -32,7 +35,7 @@
 
 {% block main %}
 <input type="text" id="datepicker">
-<div class="chart-container" style="position: relative; height:40vh; width:80vw">
+{# <div class="chart-container" style="position: relative; height:80%; width:80%"> #}
     <canvas id="temperatureChart"></canvas>
-</div>
+{# </div> #}
 {% endblock %}
