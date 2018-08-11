@@ -9,8 +9,8 @@
     });
 
     var ctx = document.getElementById("temperatureChart").getContext('2d');
-    var timeLabel = {{time}};
-    var temperatureData = {{temperature}};
+    var timeLabel = {{renderData.time}};
+    var temperatureData = {{renderData.temperature}};
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {

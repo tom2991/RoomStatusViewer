@@ -1,6 +1,8 @@
 from jinja2  import Environment, FileSystemLoader
 from os import path
 import boto3
+from datetime import datetime, timedelta, timezone
+
 
 # DB接続情報
 dynamoDB = boto3.resource('dynamodb')
@@ -10,20 +12,53 @@ templatePath = Environment(loader=FileSystemLoader(path.join(path.dirname(__file
 
 # lambdaのハンドラ
 def handle(event, context):
+    # パラメタ取得
+    # if('date' not in event['queryStringParameters']):
+    #     date = 0
+    # else:
+    #     date = event['queryStringParameters']['date']
+
+
     print("print log.")
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "text/html"},
-        "body": createPage()
+        "body": createPage(0)
     }
 
 # ページ生成メソッド
 # 日付・時刻・気温
-def createPage():
-    index = templatePath.get_template('index.html', )
-    return index.render(title=u"気温グラフ")
+def createPage(date):
 
-def getTemperatue(date):
+    # 日付が存在しないので今日の日付を取得する
+    if(date == 0):
+        date = getNowDate()
+    
+    renderData = cerateRenderData(date)
+    index = templatePath.get_template('index.html', )
+    date = "2018/08/11"
+    return index.render(title=u"気温グラフ",renderData=renderData)
+
+def cerateRenderData(date):
     # DBにアクセスし、その日の気温を取得する
-    # return temperatue
-    return 0
+    response = table.scan(
+        FilterExpression=boto3.dynamodb.conditions.Attr('datetime_key').eq(date)
+    )
+    temperateureList = []
+    timeList = []
+    for data in response['Items']:
+        temperateureList.append(data['value'])
+        dateTime = data['datetime_key'].split("_")
+        timeList.append(dateTime[1])
+    renderData = {}
+    renderData['time'] = timeList
+    renderData['temperature'] = temperateureList
+
+    return renderData
+
+# DB検索用に今日の日付を返す
+def getNowDate():
+    # JSTを指定しないと、たぶんUNIX標準時になる
+    JST = timezone(timedelta(hours=+9), 'JST')
+    now = datetime.now(JST)
+    return now.strftime("%Y%m%d")
