@@ -9,7 +9,8 @@
     });
 
     var ctx = document.getElementById("temperatureChart").getContext('2d');
-    ctx.canvas.height = 280;
+    ctx.canvas.height = 400;
+    ctx.canvas.width = 750;
     var timeLabel = {{renderData.time}};
     var temperatureData = {{renderData.temperature}};
     var myChart = new Chart(ctx, {
@@ -19,10 +20,11 @@
             datasets: [{
                 label: '# 気温',
                 data: temperatureData,
+                backgroundColor: 'skyblue'
             }]
         },
         options: {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             elements: {
                 line: {
