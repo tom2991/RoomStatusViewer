@@ -42,7 +42,7 @@ def createPage(date):
 def cerateRenderData(date):
     # DBにアクセスし、その日の気温を取得する
     response = table.scan(
-        FilterExpression=boto3.dynamodb.conditions.Attr('datetime_key').eq(date)
+        FilterExpression=boto3.dynamodb.conditions.Attr('datetime_key').begins_with(date)
     )
     temperateureList = []
     timeList = []
