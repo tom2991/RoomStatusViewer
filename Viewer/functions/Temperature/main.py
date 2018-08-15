@@ -13,31 +13,34 @@ templatePath = Environment(loader=FileSystemLoader(path.join(path.dirname(__file
 # lambdaのハンドラ
 def handle(event, context):
     # パラメタ取得
-    # if('date' not in event['queryStringParameters']):
-    #     date = 0
-    # else:
-    #     date = event['queryStringParameters']['date']
+    params = event.get('queryStringParameters', None)
+    if(params != None):
+        dispDate = params.get('date',0)
+    else :
+        dispDate = 0
+    # dispDate = event['queryStringParameters']['date']
+    # dispDate = 0
 
-
-    print("print log.")
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "text/html"},
-        "body": createPage(0)
+        "body": createPage(dispDate)
     }
 
 # ページ生成メソッド
 # 日付・時刻・気温
-def createPage(date):
+def createPage(dispDate):
 
     # 日付が存在しないので今日の日付を取得する
-    if(date == 0):
-        date = getNowDate()
-    
-    renderData = cerateRenderData(date)
+    if(dispDate == 0):
+        searchDate = getSearchDate(getNowDate())
+        dispDate = getDispDate(getNowDate())
+    else:
+        searchDate = shapeDispDate(dispDate)
+
+    renderData = cerateRenderData(searchDate)
     index = templatePath.get_template('index.html', )
-    date = "2018/08/11"
-    return index.render(title=u"気温グラフ",renderData=renderData)
+    return index.render(title=u"気温グラフ",renderData=renderData, dispDate=dispDate)
 
 def cerateRenderData(date):
     # DBにアクセスし、その日の気温を取得する
@@ -58,9 +61,24 @@ def cerateRenderData(date):
 
     return renderData
 
-# DB検索用に今日の日付を返す
+# 今日の日付を返す
 def getNowDate():
     # JSTを指定しないと、たぶんUNIX標準時になる
     JST = timezone(timedelta(hours=+9), 'JST')
     now = datetime.now(JST)
+    return now
+
+# 検索用の日付を取得する
+def getSearchDate(now):
     return now.strftime("%Y%m%d")
+
+# 画面表示用の日付を取得する
+def getDispDate(now):
+    return now.strftime("%m/%d/%Y")
+
+# 画面表示用の日付を検索用に成形する
+def shapeDispDate(dispDate):
+    # 日付は"MM/DD/YYYY"の形でパラメタから入ってくるので
+    # "YYYYMMDD"に変換する
+    dispDateList = dispDate.split("/")
+    return dispDateList[2] + dispDateList[0] + dispDateList[1]

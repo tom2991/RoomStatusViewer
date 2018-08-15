@@ -4,10 +4,12 @@
 {% endblock %}
 
 {% block javascript %}
+    // datePicker
     $(function() {
         $('#datepicker').datepicker();
     });
 
+    // Chart 
     var ctx = document.getElementById("temperatureChart").getContext('2d');
     ctx.canvas.height = 400;
     ctx.canvas.width = 750;
@@ -33,10 +35,19 @@
             }
         }
     });
+
+    // submit
+    function submitDate(){
+        // 画面を更新
+        var url = "https://ihn1zzsjzk.execute-api.us-east-2.amazonaws.com/default/RoomStatus_Temperature?date="
+        date = document.getElementById('datepicker').value;
+        location.replace(url+date);
+    }
 {% endblock %}
 
 {% block main %}
-<input type="text" id="datepicker">
+<input type="text" id="datepicker" value={{dispDate}}>
+<button type="button" onclick="submitDate();">更新</button>
 {# <div class="chart-container" style="position: relative; height:80%; width:80%"> #}
     <canvas id="temperatureChart"></canvas>
 {# </div> #}
