@@ -18,8 +18,6 @@ def handle(event, context):
         dispDate = params.get('date',0)
     else :
         dispDate = 0
-    # dispDate = event['queryStringParameters']['date']
-    # dispDate = 0
 
     return {
         "statusCode": 200,
