@@ -1,0 +1,8 @@
+{
+  "name": "SetHumid",
+  "description": "SetHumid",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::619063643007:role/service-role/dynamoDB",
+  "environment": {}
+}
