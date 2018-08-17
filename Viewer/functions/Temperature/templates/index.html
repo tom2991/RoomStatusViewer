@@ -9,11 +9,11 @@
         $('#datepicker').datepicker();
     });
 
-    // Chart 
+    // TempChart 
     var ctx = document.getElementById("temperatureChart").getContext('2d');
     ctx.canvas.height = 400;
     ctx.canvas.width = 750;
-    var timeLabel = {{renderData.time}};
+    var timeLabel = {{renderData.temp_time}};
     var temperatureData = {{renderData.temperature}};
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -23,6 +23,34 @@
                 label: '# 気温',
                 data: temperatureData,
                 backgroundColor: 'skyblue'
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            elements: {
+                line: {
+                    tension: 0, // ベジェ曲線を無効にする
+                }
+            }
+        }
+    });
+
+
+    // HumidChart 
+    var hctx = document.getElementById("humidityChart").getContext('2d');
+    hctx.canvas.height = 400;
+    hctx.canvas.width = 750;
+    var hutimeLabel = {{renderData.humid_time}};
+    var humidityData = {{renderData.humidity}};
+    var myChart2 = new Chart(hctx, {
+        type: 'line',
+        data: {
+            labels: hutimeLabel,
+            datasets: [{
+                label: '# 湿度',
+                data: humidityData,
+                backgroundColor: 'green'
             }]
         },
         options: {
@@ -50,5 +78,8 @@
 <button type="button" onclick="submitDate();">更新</button>
 {# <div class="chart-container" style="position: relative; height:80%; width:80%"> #}
     <canvas id="temperatureChart"></canvas>
+{# </div> #}
+{# <div class="chart-container" style="position: relative; height:80%; width:80%"> #}
+    <canvas id="humidityChart"></canvas>
 {# </div> #}
 {% endblock %}
