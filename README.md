@@ -3,5 +3,7 @@
 以下のAPIを実装します
 - SetTemp
   部屋の気温を記録するAPI
+- SetHumid
+  部屋の湿度を記録するAPI
 - StatusViewer
   各種状態を表示するビュワー
